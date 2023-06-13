@@ -1,6 +1,7 @@
 import Cliente, Item, Vendedor
 class Pedido:
     def __init_(self, cliente, item, vendedor):
+        
         if isinstance(cliente, Cliente):
             self.cliente = cliente
         else:
