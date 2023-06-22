@@ -17,10 +17,7 @@ def valida_cpf(cpf):
         return False
 
 def formata_cpf(cpf):
-    if re.match("^[0-9\-]+$", cpf):
-        cpf = cpf.replace('-', '')
-    if re.match("^[0-9\.]+$", cpf):
-        cpf = cpf.replace('.', '')
+    cpf = re.sub('[^\d]', '', cpf)
     return cpf
 
 def valida_data(nascimento):
