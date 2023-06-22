@@ -6,7 +6,7 @@ fake = Faker('pt_BR')
 def criar_produto():
     codigo_barras = input('Insira o código do produto')
     retorno = Service.consulta_produto(codigo_barras)
-    if retorno == None:
+    if retorno is None:
         nome_produto = input('Insira o nome do produto')
         #Conferir se o nome ja está inserido no banco
 
@@ -30,26 +30,29 @@ def criar_produto():
 
 def cadastrar_funcionario():
     cpf = input('Insira o CPF do funcionário: ')
-    #Conferir se já está inserido na tabela de funcionários, Conferir se tem o tamanho de CPF e se
-    #possui somente números
+    validations.valida_cpf(cpf)
+    retorno = Service.consulta_funcionario(cpf)
+    if retorno is None:
+    
+        nome = input('Insira o nome do funcionário: ')
+        #Verificar se são somente letras
 
-    nome = input('Insira o nome do funcionário: ')
-    #Verificar se são somente letras
+        salario = input('Insira o salário do funcionário: ')
+        #Verificar se são somente números
 
-    salario = input('Insira o salário do funcionário: ')
-    #Verificar se são somente números
+        taxa = input('Insira a taxa de comissão por vende do funcionário: ')
+        #Verificar se são somente números e se é abaixo ou igual a 15%
 
-    taxa = input('Insira a taxa de comissão por vende do funcionário: ')
-    #Verificar se são somente números e se é abaixo ou igual a 15%
-
-    comissão = 0
-    #A cada venda do funcionário deve se adicionar o total de comissão do mes nessa variável
-
+        vendedor = Vendedor(cpf, nome, salario, taxa)
+        Service.cadastra_funcionario(vendedor)
+    else:
+        nome, taxa, salario = retorno[1], retorno[2], retorno[3]
+        print(f"Vendedor já cadastrado! {nome} - {taxa} - {salario}")
 def cadastrar_cliente():
     cpf = input('Insira o CPF do cliente: ')
     validations.valida_cpf(cpf)
     retorno = Service.consulta_cliente(cpf)
-    if retorno == None:
+    if retorno is None:
         cpf = validations.formata_cpf(cpf)
 
         nome = input('Insira o nome do cliente: ')
