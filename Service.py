@@ -51,12 +51,13 @@ def consulta_funcionario(cpf):
 def cadastra_funcionario(vendedor):
     conn = sqlite3.connect('../BancoLoja.db')
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM funcionarios where cpf ={vendedor.cpf}")
+    cursor.execute(f"SELECT * FROM funcionarios where cpf ='{vendedor.cpf}'")
     conf_exist = cursor.fetchone()
     if conf_exist:
         pass
     else:
         cursor.execute(f"INSERT INTO funcionarios (cpf,name,salario,taxa,comissao) VALUES (?,?,?,?,?)"
                        ,(f'{vendedor.cpf}', f'{vendedor.nome}',f'{vendedor.salario}', f'{vendedor.taxa}',f'{vendedor.comissao}'))
-    
+    conn.commit()
+    conn.close()
 

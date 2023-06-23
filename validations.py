@@ -1,7 +1,8 @@
 import re
 
 def valida_nome(nome):
-    if nome.isalpha() and len(nome) <= 100:
+    nomespace = nome.replace(' ', '')
+    if nomespace.isalpha() and len(nome) <= 100:
         return True
     else:
         return False

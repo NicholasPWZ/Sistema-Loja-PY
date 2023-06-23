@@ -43,7 +43,7 @@ class Produto:
         self.tamanho = tamanho
 
 class Vendedor:
-    def __init__(self, nome, cpf, taxa, salario):
+    def __init__(self,cpf, nome, salario, taxa):
         self.nome = nome
         self.cpf = cpf
         self.taxa = float(taxa) / 100
