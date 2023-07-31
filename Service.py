@@ -19,6 +19,13 @@ def cadastra_cliente(cliente):
                        ,(f'{cliente.cpf}', f'{cliente.nome}',f'{cliente.nascimento}', f'{cliente.rua}',f'{cliente.numero}', f'{cliente.complemento}'))
     conn.commit()
     conn.close()
+
+def visualizar_todos_clientes():
+    conn = sqlite3.connect('../BancoLoja.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT * FROM clientes")
+    data_return = cursor.fetchall()
+    return data_return
 #-------------#
 
 def cadastra_produto(produto):
@@ -29,8 +36,10 @@ def cadastra_produto(produto):
     if conf_exist:
         pass
     else:
-        cursor.execute(f"INSERT INTO produtos (codigo,name,preco,estoque,cor,tamanho) VALUES (?,?,?,?,?,?)"
+        cursor.execute(f"INSERT INTO produtos (codigo,nome,preco,estoque,cor,tamanho) VALUES (?,?,?,?,?,?)"
                        ,(f'{produto.codigo}', f'{produto.nome}',f'{produto.preco}', f'{produto.estoque}',f'{produto.cor}', f'{produto.tamanho}'))
+    conn.commit()
+    conn.close()
         
 def consulta_produto(cod):
     conn = sqlite3.connect('../BancoLoja.db')

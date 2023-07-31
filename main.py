@@ -4,26 +4,39 @@ from faker import Faker
 fake = Faker('pt_BR')
 
 def criar_produto():
-    codigo_barras = input('Insira o código do produto')
+    codigo_barras = input('Insira o código do produto: ')
+    
     retorno = Service.consulta_produto(codigo_barras)
+    
     if retorno is None:
-        nome_produto = input('Insira o nome do produto')
+        nome_produto = input('Insira o nome do produto: ')
         #Conferir se o nome ja está inserido no banco
 
-        preco = input('Insira o preço do produto')
-        validations.valida_numero(preco)
+        preco = input('Insira o preço do produto: ')
+        if validations.valida_numero(preco) is False:
+            print(f'Preço: {preco} inválido')
+            return
 
-        estoque = input('Informe a quantidade em estoque do produto')
-        validations.valida_inteiro(estoque)
+        estoque = input('Informe a quantidade em estoque do produto: ')
+        if validations.valida_inteiro(estoque) is False:
+            print(f'Quantidade {estoque} em estoque inválida')
+            return
 
-        flag = input('C - Para adicionar cor ao produto\nP - Para pular')
+        flag = input('C - Para adicionar cor ao produto\nP - Para pular: ').upper()
         if flag == 'C':
-            ...
-        flag = input('T - Para adicionar tamanho ao produto\nP - Para pular')
+            cor = input('Informe a cor: ')
+        else:
+            cor = None
+
+        flag = input('T - Para adicionar tamanho ao produto\nP - Para pular: ').upper()
         if flag == 'T':
-            ...
+            tamanho = input('Informe o tamanho: ')
+        else:
+            tamanho = None
+        produto = Produto(codigo_barras, nome_produto, preco, estoque, cor, tamanho)
+        Service.cadastra_produto(produto)
     else:
-        ...
+        print(f'Produto já cadastrado: {retorno[1]} {retorno[-1]} {retorno[-2]} - Preço: {retorno[2]} - Itens no estoque: {retorno[3]}')
 
     
     #Adicionar produto ao banco de dados
@@ -35,6 +48,7 @@ def cadastrar_funcionario():
         return False
     
     retorno = Service.consulta_funcionario(cpf)
+   
     if retorno is None:
     
         nome = input('Insira o nome do funcionário: ')
@@ -126,7 +140,7 @@ def criar_pedido():
 
 
 while True:
-    decisao = input('1 - Cadastrar Cliente\n2 - Cadastrar Funcionário\n9 - Sair do programa\n-|>')
+    decisao = input('1 - Cadastrar Cliente\n2 - Cadastrar Funcionário\n3 - Cadastrar Pedido\n4 - Cadastrar Produto\n9 - Sair do programa\n-|> ')
     if decisao == '9':
         break
     
@@ -144,5 +158,9 @@ while True:
         validacao = criar_pedido()
         if validacao is False:
             print('ERRO NA CRIAÇÃO DO PEDIDO')
+    elif decisao == '4':
+        validacao = criar_produto()
+        if validacao is False:
+            print('ERRO NA CRIAÇÃO DO PRODUTO')
     elif decisao == '8':
         ...

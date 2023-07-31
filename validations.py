@@ -28,11 +28,14 @@ def valida_data(nascimento):
     return False
 
 def valida_numero(num):
-    if num.isdigit():
+    pattern = r'^[0-9.]+$'
+    if (re.match(pattern, num)):
         return True
+    
     return False
 
 def valida_inteiro(num):
+    num = int(num)
     if type(num) is int:
         return True
     return False
