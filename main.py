@@ -1,16 +1,16 @@
 from Classes import Cliente, Pedido, Produto, Vendedor, Item
-import Service, validations
+import repository, validations
 from faker import Faker
 fake = Faker('pt_BR')
 
 def criar_produto():
     codigo_barras = input('Insira o código do produto: ')
     
-    retorno = Service.consulta_produto(codigo_barras)
+    retorno = repository.consulta_produto(codigo_barras)
     
     if retorno is None:
         nome_produto = input('Insira o nome do produto: ')
-        #Conferir se o nome ja está inserido no banco
+        
 
         preco = input('Insira o preço do produto: ')
         if validations.valida_numero(preco) is False:
@@ -34,7 +34,7 @@ def criar_produto():
         else:
             tamanho = None
         produto = Produto(codigo_barras, nome_produto, preco, estoque, cor, tamanho)
-        Service.cadastra_produto(produto)
+        repository.cadastra_produto(produto)
     else:
         print(f'Produto já cadastrado: {retorno[1]} {retorno[-1]} {retorno[-2]} - Preço: {retorno[2]} - Itens no estoque: {retorno[3]}')
 
@@ -47,7 +47,7 @@ def cadastrar_funcionario():
         print(f'CPF: {cpf} É INVÁLIDO')
         return False
     
-    retorno = Service.consulta_funcionario(cpf)
+    retorno = repository.consulta_funcionario(cpf)
    
     if retorno is None:
     
@@ -68,7 +68,7 @@ def cadastrar_funcionario():
             return False
         
         vendedor = Vendedor(cpf, nome, salario, taxa)
-        Service.cadastra_funcionario(vendedor)
+        repository.cadastra_funcionario(vendedor)
         print(f'Funcionário {vendedor.nome} com CPF: {vendedor.cpf} FOI CADASTRADO COM SUCESSO!')
     else:
         nome, taxa, salario = retorno[1], retorno[2], retorno[3]
@@ -81,7 +81,7 @@ def cadastrar_cliente():
         print(f'CPF : {cpf} INVÁLIDO')
         return
     
-    retorno = Service.consulta_cliente(cpf)
+    retorno = repository.consulta_cliente(cpf)
     if retorno is None:
         
 
@@ -108,33 +108,49 @@ def cadastrar_cliente():
         complemento = input('Insira o complemento(se houver): ')
 
         cliente = Cliente(nome,cpf,nascimento,rua,numero,complemento)
-        Service.cadastra_cliente(cliente)
+        repository.cadastra_cliente(cliente)
         print(f'Cliente {cliente.nome} com CPF: {cliente.cpf} FOI CADASTRADO COM SUCESSO!')
     else:
         nome, nascimento, rua, numero, complemento = retorno[1], retorno[2], retorno[3], retorno[4], retorno[5]
         print(f"Cliente já cadastrado! {nome} - {nascimento} - {rua} - {numero} - {complemento}")
     
 def criar_pedido():
-    cliente = input('Insira o CPF do cliente -|>')
+    cliente = input('Insira o CPF do cliente -|> ' )
     cliente = validations.formata_cpf(cliente)
     if validations.valida_cpf(cliente) is False:
         print(f'CPF {cliente} É INVÁLIDO')
         return
-    print(Service.consulta_cliente(cliente))
-    #Puxa no banco as informações do cliente, se não houver, chama a função de cadastrar cliente
+    retorno_cliente = repository.consulta_cliente(cliente)
+    while retorno_cliente is None:
+        print('Cliente deve ser cadastrado: ')
+        cadastrar_cliente()
+        cliente = input('Insira o CPF do cliente -|> ' )
+        cliente = validations.formata_cpf(cliente)
+        if validations.valida_cpf(cliente) is False:
+            print(f'CPF {cliente} É INVÁLIDO')
+            return
+        retorno_cliente = repository.consulta_cliente(cliente)
+    print(retorno_cliente)
 
-    vendedor = input('Informe o CPF do vendedor -|>')
+    vendedor = input('Informe o CPF do vendedor -|> ')
     vendedor = validations.formata_cpf(vendedor)
     if validations.valida_cpf(vendedor) is False:
         print(f'CPF {vendedor} É INVÁLIDO')
         return
-    print(Service.consulta_funcionario(vendedor))
-    #Consulta se é um cpf cadastrado no banco, se não for, é invalido. Funcionário deve ser cadastrado ANTES
-
-    cod_prod = input('Insira o código do produto -|>')
-    #Validar se já está cadastrado 
+    if repository.consulta_funcionario(vendedor) is None:
+        print('Funcionário não cadastrado!')
+        return
     
-    qtd_prod = input('Insira a quantidade desse produto -|>')
+
+    cod_prod = input('Insira o código do produto -|> ')
+    #Validar se já está cadastrado 
+    retorno_produto = repository.consulta_produto(cod_prod)
+    if retorno_produto is None:
+        print('Produto não cadastrado no sistema')
+        return
+    print(retorno_produto)
+    
+    qtd_prod = input('Insira a quantidade desse produto -|> ')
     validations.valida_inteiro(qtd_prod)
     #Validar se o produto tem estoque disponível
 
