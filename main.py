@@ -140,19 +140,37 @@ def criar_pedido():
     if repository.consulta_funcionario(vendedor) is None:
         print('Funcionário não cadastrado!')
         return
-    
+    retorno_vendedor = repository.consulta_funcionario(vendedor)
+    nota_final = { }   
+    print("Adicione os produtos, para finalizar digite 'sair' ao invés do código produto")
+    while True:    
+        cod_prod = input('Insira o código do produto  -|> ') 
+        if cod_prod == 'sair':
+            break
+        retorno_produto = repository.consulta_produto(cod_prod)
+        if retorno_produto is None:
+            print('Produto não cadastrado no sistema')
+            return
+        print(f'{retorno_produto[1]} {retorno_produto[4]} Preço: {retorno_produto[2]}')
+        nome_produto, preco_produto = retorno_produto[1] +' '+ retorno_produto[4], float(retorno_produto[2])
+        nota_final['vendedor'] = retorno_vendedor[4]
+        nota_final['cliente'] = retorno_cliente[1]
+        nota_final['produtos'] = {}
+        nota_final['produtos'][cod_prod] = {}
+        dicio_prods = nota_final['produtos'][cod_prod]
+        dicio_prods['nome'] = nome_produto
+        dicio_prods['precoUnitário'] = preco_produto
+        qtd_prod = input('Insira a quantidade desse produto -|> ')
+        if validations.valida_inteiro(qtd_prod) is None:
+            print('Informe um número válido')
+            return
+        if int(qtd_prod) > int(retorno_produto[3]):
+            print('Quantidade indisponível no estoque')
+            return
+        dicio_prods['quantidade'] = qtd_prod
 
-    cod_prod = input('Insira o código do produto -|> ')
-    #Validar se já está cadastrado 
-    retorno_produto = repository.consulta_produto(cod_prod)
-    if retorno_produto is None:
-        print('Produto não cadastrado no sistema')
-        return
-    print(retorno_produto)
-    
-    qtd_prod = input('Insira a quantidade desse produto -|> ')
-    validations.valida_inteiro(qtd_prod)
-    #Validar se o produto tem estoque disponível
+    print (nota_final)
+
 
 
 while True:

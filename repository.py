@@ -70,3 +70,15 @@ def cadastra_funcionario(vendedor):
     conn.commit()
     conn.close()
 
+#-------------#
+
+def consulta_pedido(num):
+    conn = sqlite3.connect('../BancoLoja.db')
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT * from produtos where id ='{num}'")
+    dados = cursor.fetchone()
+    return dados
+
+#def cadastra_pedido(pedido):
+
+

@@ -9,29 +9,17 @@ class Cliente:
 
 class Item:
     def __init__(self, produto, quantidade):
-        if isinstance(produto, Produto):
-            self.produto = produto
-        else:
-            raise TypeError('Produto fornecido não é válido')
+        self.produto = produto
         self.quantidade = quantidade
-
-        self.__dict__[produto] = quantidade
+        
 
 class Pedido:
     def __init_(self, cliente, item, vendedor):
+        self.cliente = cliente
+        self.item = item
+        self.vendedor = vendedor
         
-        if isinstance(cliente, Cliente):
-            self.cliente = cliente
-        else:
-            raise TypeError('Cliente fornecido não é válido')
-        if isinstance(item, Item):
-            self.item = item
-        else:
-            raise TypeError('Item fornecido não é válido')
-        if isinstance(vendedor, Vendedor):
-            self.vendedor = vendedor
-        else:
-            raise TypeError('Vendedor fornecido não é válido')
+           
 
 class Produto:
     def __init__(self, codigo, nome, preco, estoque, cor = None, tamanho = None):
