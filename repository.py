@@ -48,6 +48,13 @@ def consulta_produto(cod):
     dados = cursor.fetchone()
     return dados
 
+def atualiza_produto(num,code):
+    conn = sqlite3.connect('../BancoLoja.db')
+    cursor = conn.cursor()
+    cursor.execute(f"update produtos set estoque ='{num}' where codigo='{code}'")
+    conn.commit()
+    conn.close()
+
 #-------------#
 
 def consulta_funcionario(cpf):

@@ -169,6 +169,10 @@ def criar_pedido():
             return
         dicio_prods['quantidade'] = qtd_prod
 
+        
+        repository.atualiza_produto((int(retorno_produto[3]) - int(qtd_prod)),cod_prod)
+
+
     print (nota_final)
 
 
